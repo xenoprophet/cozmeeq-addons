@@ -1,14 +1,14 @@
 FROM python:3.11-slim
 
 # build-essential needed for zeroc-ice native extension
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential libssl-dev libbz2-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libssl-dev libbz2-dev libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Install Python dependencies (includes slice2py)
 COPY livekit-authentication/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN CFLAGS="-D_DEFAULT_SOURCE" pip install --no-cache-dir -r requirements.txt
 
 # Compile Murmur.ice → message_history/generated/Murmur_ice.py
 COPY message-history/proto/Murmur.ice ./proto/Murmur.ice
