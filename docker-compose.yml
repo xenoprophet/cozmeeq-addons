@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
 
   auth:
-    image: ghcr.io/xenoprophet/livekit-auth:latest
+    image: ghcr.io/xenoprophet/cozmeeq-addons:latest
     networks:
       br0:
         ipv4_address: 192.168.1.13
