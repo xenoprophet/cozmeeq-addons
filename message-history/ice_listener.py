@@ -31,9 +31,19 @@ def _ctx() -> dict:
 
 
 def _load_murmur():
+    import sys  # noqa: PLC0415
     try:
-        from .generated import Murmur_ice  # noqa: PLC0415
-        return Murmur_ice
+        # Import Murmur_ice as a top-level module (not via package) so the
+        # __name__ = 'Murmur' trick inside the generated file works correctly
+        # and registers types under sys.modules['Murmur'].
+        generated_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "generated")
+        if generated_dir not in sys.path:
+            sys.path.insert(0, generated_dir)
+        import Murmur_ice  # noqa: PLC0415
+        murmur = sys.modules.get("Murmur")
+        if murmur is None:
+            raise RuntimeError("Murmur module not registered in sys.modules after import")
+        return murmur
     except Exception as exc:
         raise RuntimeError(
             "Generated Murmur bindings not found. "
