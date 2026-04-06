@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
 # build-essential needed for zeroc-ice native extension
-RUN apt-get update && apt-get install -y --no-install-recommends build-essential \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
